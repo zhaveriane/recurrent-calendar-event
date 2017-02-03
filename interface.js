@@ -1,4 +1,8 @@
 $(function() {
+    $(function() {
+        $("#event-name").focus();
+    });
+
     $('#all-day-event-checkbox').change(function() {
         if (this.checked) {
             showAllDayEventOptions();
