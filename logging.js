@@ -172,7 +172,7 @@ function sendSampleNetworkLog(
         target,
         info,
         state) {
-    var formid = "e/1FAIpQLSfTGNsP_71n7p7avtvN0o3QK2gaaWEctdk0tN7KKCeuOKZqVQ";
+    var formid = "e/1FAIpQLSevDJ0Np0wp9zzwXu71v9vJIq__THsdPkiGdJFnWZVy7BJnBA";
     var data = {
         "entry.46473373": uid,
         "entry.2016200400": time,
@@ -185,6 +185,7 @@ function sendSampleNetworkLog(
     for (key in data) {
         params.push(key + "=" + encodeURIComponent(data[key]));
     }
+    console.log("logging");
     // Submit the form using an image to avoid CORS warnings.
     (new Image).src = "https://docs.google.com/forms/d/" + formid +
          "/formResponse?" + params.join("&");

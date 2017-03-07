@@ -34,13 +34,13 @@ $(function() {
         hideRecurrentEventDetails();
 
         if (val == "daily") {
-            $('#daily-recurrent-details').show();
+            $('#daily-recurrent-details').removeClass("hidden");
         } else if (val == "weekly") {
-            $('#weekly-recurrent-details').show();
+            $('#weekly-recurrent-details').removeClass("hidden");
         } else if (val == "monthly") {
-            $('#monthly-recurrent-details').show();
+            $('#monthly-recurrent-details').removeClass("hidden");
         } else if (val == "yearly") {
-            $('#yearly-recurrent-details').show();
+            $('#yearly-recurrent-details').removeClass("hidden");
         }
     });
 
@@ -51,19 +51,19 @@ $(function() {
 
 // Functions to reset recurrent event interface
 function hideRecurrentEventDetails() {
-    $('#daily-recurrent-details').hide();
-    $('#weekly-recurrent-details').hide();
-    $('#monthly-recurrent-details').hide();
-    $('#yearly-recurrent-details').hide();
+    $('#daily-recurrent-details').addClass("hidden");
+    $('#weekly-recurrent-details').addClass("hidden");
+    $('#monthly-recurrent-details').addClass("hidden");
+    $('#yearly-recurrent-details').addClass("hidden");
 }
 function hideRecurrentEventOptions() {
-    $('#recurrent-event-details-line').hide();
-    $('#recurrent-event-details').hide();
+    $('#recurrent-event-details-line').addClass("hidden");
+    $('#recurrent-event-details').addClass("hidden");
 }
 function showRecurrentEventOptions() {
-    $('#recurrent-event-details-line').show();
-    $('#recurrent-event-details').show();
-    $('#daily-recurrent-details').show();
+    $('#recurrent-event-details-line').removeClass("hidden");
+    $('#recurrent-event-details').removeClass("hidden");
+    $('#daily-recurrent-details').removeClass("hidden");
 }
 function resetAllRecurrentEventDetails() {
     $('#recurrent-event-time-selector').val('daily');
@@ -72,20 +72,20 @@ function resetAllRecurrentEventDetails() {
     $('.month-checkbox').prop('checked', false);
 }
 function showAllDayEventOptions() {
-    $('#start-time-row').hide();
-    $('#end-time-row').hide();
-    $('#all-day-event-row').show();
+    $('#start-time-row').addClass("hidden");
+    $('#end-time-row').addClass("hidden");
+    $('#all-day-event-row').removeClass("hidden");
 }
 function hideAllDayEventOptions() {
-    $('#all-day-event-row').hide();
-    $('#start-time-row').show();
-    $('#end-time-row').show();
+    $('#all-day-event-row').addClass("hidden");
+    $('#start-time-row').removeClass("hidden");
+    $('#end-time-row').removeClass("hidden");
     $('#all-day-event-date').val('');
 }
 function showRecurrentEventEndDetails() {
-    $('#recurrent-event-end-date-row').show();
+    $('#recurrent-event-end-date-row').removeClass("hidden");
 }
 function hideRecurrentEventEndDetails() {
-    $('#recurrent-event-end-date-row').hide();
+    $('#recurrent-event-end-date-row').addClass("hidden");
     $('#recurrent-event-end-date').val('');
 }
