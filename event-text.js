@@ -17,8 +17,8 @@ $(function() {
 
 // End time must come after start time
 function isValidEndTime() {
-	var startTime = $('#event-start-time').val();
-	var endTime = $('#event-end-time').val();
+	var startTime = $('#event-start-date').datetimepicker('getValue');
+	var endTime = $('#event-end-date').datetimepicker('getValue');
     return !(endTime < startTime);
 }
 function checkInputs() {
@@ -126,11 +126,11 @@ function getEventText() {
 
 	var allDayEvent = $('#all-day-event-checkbox').is(':checked');
 	if (allDayEvent) {
-		var eventDate = $('#all-day-event-date').val();
+		var eventDate = $('#all-day-event-date').datetimepicker('getValue');
 		eventString += 'an all day event on ' + eventDate;
 	} else {
-		var startTime = $('#event-start-time').val();
-		var endTime = $('#event-end-time').val();
+		var startTime = $('#event-start-date').datetimepicker('getValue');
+		var endTime = $('#event-end-date').datetimepicker('getValue');
 		eventString += 'starting at ' + startTime + ' and ending at ' + endTime;
 	}
 
@@ -168,7 +168,7 @@ function getEventText() {
 		}
 	}
 
-	var endDate = $('#recurrent-event-end-date').val();
+	var endDate = $('#recurrent-event-end-date').datetimepicker('getValue');
 	eventString += 'until ' + endDate + '.';
 	return eventString;
 }

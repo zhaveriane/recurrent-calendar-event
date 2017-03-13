@@ -46,17 +46,12 @@ body {
 
 
 
-input[type="text"], input[type="date"], input[type="datetime-local"] {
-    background-color: transparent;
-    outline: none;
-    outline-style: none;
+input[type="text"]#event-name, input[type="text"]#event-location {
     border: none;
-    font: 12pt Helvetica;
 }
 input[type="text"].title {
     font: 18pt Helvetica;
-}
-select {
+    margin-bottom: 5px;
 }
 
 

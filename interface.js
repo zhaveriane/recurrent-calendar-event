@@ -3,6 +3,18 @@ $(function() {
         $("#event-name").focus();
     });
 
+    $( "#event-start-date" ).datetimepicker();
+    $( "#event-end-date" ).datetimepicker();
+    $("#all-day-event-date").datetimepicker({
+        timepicker: false,
+        onChangeDateTime: function(dp, $input) {
+            var datetime = $input.val();
+            var date = datetime.split(" ")[0];
+            $input.val(date);
+        }
+    });
+    $( "#recurrent-event-end-date" ).datetimepicker();
+
     $('#all-day-event-checkbox').change(function() {
         if (this.checked) {
             showAllDayEventOptions();

@@ -172,7 +172,7 @@ function sendSampleNetworkLog(
         target,
         info,
         state) {
-    var formid = "e/1FAIpQLSevDJ0Np0wp9zzwXu71v9vJIq__THsdPkiGdJFnWZVy7BJnBA";
+    var formid = "";
     var data = {
         "entry.46473373": uid,
         "entry.2016200400": time,

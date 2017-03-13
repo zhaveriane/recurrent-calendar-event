@@ -3,7 +3,7 @@
  * arg eventsList is a list of Event objects
  */
 
-var Event = function(name, loc, eventsList) {
+var RecurringCalendarEvent = function(name, loc, eventsList) {
 	Object.defineProperty(this, 'name', {value: name, writable: false});
 	Object.defineProperty(this, 'loc', {value: loc, writable: false});
 	Object.defineProperty(this, 'eventsList', {value: eventsList, writable: false});

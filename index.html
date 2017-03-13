@@ -5,12 +5,18 @@
 
     <link rel="stylesheet" href="layout.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="external_js/jquery.datetimepicker.css"/ >
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="external_js/build/jquery.datetimepicker.full.min.js"></script>
+
+    <!-- <script src="event.js"></script>
+    <script src="recurring-event.js"></script> -->
     <script src="interface.js"></script>
     <script src="event-text.js"></script>
+    <!-- <script src="create-recurring-event.js"></script> -->
     <!-- Remove this script to disable logging -->
-    <script src="logging.js"></script>
+    <!-- <script src="logging.js"></script> -->
 </head>
 
 <body>
@@ -24,19 +30,19 @@
         <table id="time-details">
             <tr>
                 <td class="time-detail-name">all-day:</td>
-                <td class=""><input id="all-day-event-checkbox"type="checkbox"></td>
+                <td class=""><input id="all-day-event-checkbox" type="checkbox"></td>
             </tr>
             <tr id="start-time-row">
                 <td class="time-detail-name">starts:</td>
-                <td class=""><input id="event-start-time" type="datetime-local"></td>
+                <td class=""><input id="event-start-date" type="text"></td>
             </tr>
             <tr id="end-time-row">
                 <td class="time-detail-name">ends:</td>
-                <td class=""><input id="event-end-time" type="datetime-local"></td>
+                <td class=""><input id="event-end-date" type="text"></td>
             </tr>
             <tr id="all-day-event-row" class="hidden">
                 <td class="time-detail-name">date:</td>
-                <td class=""><input id="all-day-event-date"type="date"></td>
+                <td class=""><input id="all-day-event-date" type="text"></td>
             </tr>
 
 
@@ -57,7 +63,7 @@
             </tr>
             <tr id="recurrent-event-end-date-row" class="hidden">
                 <td class="time-detail-name">end repeat:</td>
-                <td class=""><input id="recurrent-event-end-date" type="date"></td>
+                <td class=""><input id="recurrent-event-end-date" type="text"></div></td>
             </tr>
         </table>
 
