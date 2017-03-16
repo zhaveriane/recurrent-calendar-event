@@ -10,11 +10,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="external_js/build/jquery.datetimepicker.full.min.js"></script>
 
-    <!-- <script src="event.js"></script>
-    <script src="recurring-event.js"></script> -->
+    <script src="event.js"></script>
     <script src="interface.js"></script>
     <script src="event-text.js"></script>
-    <!-- <script src="create-recurring-event.js"></script> -->
+    <script src="create-recurring-event.js"></script>
     <!-- Remove this script to disable logging -->
     <!-- <script src="logging.js"></script> -->
 </head>
@@ -74,16 +73,16 @@
             <tr>
                 <td>Frequency: </td>
                 <td><select id="recurrent-event-time-selector">
-                    <option value="daily" selected="selected">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="yearly">Yearly</option>
+                    <option value="day" selected="selected">Daily</option>
+                    <option value="week">Weekly</option>
+                    <option value="month">Monthly</option>
+                    <option value="year">Yearly</option>
                 </select></td>
             </tr>
         </table>
 
         <div id="daily-recurrent-details" class="hidden">
-            Every <input id="daily-recurrent-freq" type="text" value="1" maxlength="3" style="width:30px;"> day(s).
+            Every <input id="dayly-recurrent-freq" type="text" value="1" maxlength="3" style="width:30px;"> day(s).
         </div>
 
         <div id="weekly-recurrent-details" class="hidden">

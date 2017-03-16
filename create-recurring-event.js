@@ -1,3 +1,6 @@
+// For simplicity this calendar has no backend.
+// An event is created as an Event object with customizable parameters.
+
 /////////////////////////////////////////////////////////////////////////////
 // New Event Creation
 /////////////////////////////////////////////////////////////////////////////
@@ -5,32 +8,11 @@
 $(function() {
 	$('#create-event-button').click(function() {
 		if (checkInputs()) {
-			var events = createEvent();
-			console.log(events);
+			var evt = createEvent();
+			console.log("Event created:\n" + evt);
 		}
 	});
 });
-
-// End time must come after start time
-function isValidEndTime() {
-	var startTime = $('#event-start-date').val();
-	var endTime = $('#event-end-date').val();
-    return !(endTime < startTime);
-}
-function checkInputs() {
-	if (!isValidEndTime()) {
-		writeEventToScreen('End date must come after start date.');
-		return false;
-	}
-
-	var frequency = $('#' + $('#recurrent-event-time-selector').val() + '-recurrent-freq').val();
-	if (!$.isNumeric(frequency)) {
-		writeEventToScreen('Frequency must be a numeric value.');
-		return false;
-	}
-
-	return true;
-}
 
 
 
@@ -39,6 +21,7 @@ function getWeeklyRepeatingDays() {
 
 	var weekdayIds = ['#weekday-sun', '#weekday-mon', '#weekday-tue', '#weekday-wed', '#weekday-thu', '#weekday-fri', 
 		'#weekday-sat'];
+	var weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 	for (i = 0; i < weekdayIds.length; i++) {
 		if ($(weekdayIds[i]).is(':checked')) {
 			days.push(weekdays[i]);
@@ -67,9 +50,10 @@ function getYearlyRepeatingMonths() {
 
 	var monthIds = ['#year-jan', '#year-feb', '#year-mar', '#year-apr', '#year-may', '#year-jun', '#year-jul', 
 		'#year-aug', '#year-sept', '#year-oct', '#year-nov', '#year-dec'];
+	var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 	for (i = 0; i < monthIds.length; i++) {
 		if ($(monthIds[i]).is(':checked')) {
-			months.push(i);
+			months.push(monthNames[i]);
 		}
 	}
 
@@ -78,61 +62,6 @@ function getYearlyRepeatingMonths() {
 
 
 
-function createSimpleRecurringEvent(calEvent, endDate, yearInc, monthInc, dayInc) {
-	eventsList = [];
-
-	currentEvent = calEvent;
-	while (currentEvent.before(endDate)) {
-		console.log(currentEvent);
-		eventsList.push(currentEvent);
-		currentEvent = currentEvent.dupeEvent(yearInc, monthInc, dayInc);
-	}
-
-	return eventsList;
-}
-function createCustomYearlyRecurringEvent(calEvent, endDate, inc, units) {
-	eventsList = [calEvent];
-	currentEvent = calEvent;
-	while (currentEvent.before(endDate)) {
-		currentEvent = currentEvent.dupeEvent(0, 0, 1);
-		yearOffset = currentEvent.getFullYear() - calEvent.getFullYear()
-		if (units.include(currentEvent.getMonth()) && yearOffset%inc == 0) {
-			eventsList.push(currentEvent)
-		}
-	}
-	return eventsList;
-}
-function createCustomMonthlyRecurringEvent(calEvent, endDate, inc, units) {
-	eventsList = [calEvent];
-	currentEvent = calEvent;
-	while (currentEvent.before(endDate)) {
-		currentEvent = currentEvent.dupeEvent(0, 0, 1);
-		monthOffset = currentEvent.getMonth() + 12*(currentEvent.getFullYear() - calEvent.getFullYear()) - calEvent.getMonth();
-		if (units.include(currentEvent.getDate()) && monthOffset%inc == 0) {
-			eventsList.push(currentEvent)
-		}
-	}
-	return eventsList;
-}
-function createCustomWeeklyRecurringEvent(calEvent, endDate, inc, units) {
-	eventsList = [calEvent];
-	currentEvent = calEvent;
-	weekOffset = 0;
-	while (currentEvent.before(endDate)) {
-		for (i = 0; i < units.length; i++) {
-			days = units[i] - calEvent.getDay();
-			if (days < 0) {
-				days += 7;
-			}
-			currentEvent = calEvent.dupeEvent(0, 0, days + 7*weekOffset);
-			if (currentEvent.before(endDate)) {
-				eventsList.push(currentEvent);
-			}
-		}
-		weekOffset += 1;
-	}
-	return eventsList;
-}
 function createEvent() {
 	var eventName = $('#event-name').val();
 	var eventLocation = $('#event-location').val();
@@ -142,73 +71,62 @@ function createEvent() {
 
 	var allDayEvent = $('#all-day-event-checkbox').is(':checked');
 	if (allDayEvent) {
-		var eventTimeInput = $('#all-day-event-date').val();
-		var eventTime = new Date(eventTimeInput);
-		var year = eventTime.getFullYear();
-		var month = eventTime.getMonth();
-		var day = eventTime.getDate();
-		startTime = eventTime;
+		startTime = $('#all-day-event-date').datetimepicker('getValue');
+		var year = startTime.getFullYear();
+		var month = startTime.getMonth();
+		var day = startTime.getDate();
 		endTime = new Date(year, month, day, 23, 59, 59, 999);
 	} else {
-		startTimeInput = $('#event-start-date').val();
-		startTime = new Date(startTimeInput);
-		endTimeInput = $('#event-end-date').val();
-		endTime = new Date(endTimeInput);
+		startTime = $('#event-start-date').datetimepicker('getValue');
+		endTime = $('#event-end-date').datetimepicker('getValue');
 	}
-	var calEvent = new CalendarEvent(eventName, eventLocation, startTime, endTime);
+	var evt = new CalendarEvent(eventName, eventLocation, startTime, endTime);
 
 	var repeatOption = $('#recurrent-event-type-selector').val();
 	if (repeatOption == 'none') {
-		return calEvent;
+		return evt;
 	}
 
 
 
-	var endDateInput = $('#recurrent-event-end-date').val();
-	var endDate = new Date(endDateInput);
-	var recurringEvents;
+	evt.repeatEvery = 1;
+	evt.repeatOption = repeatOption;
+	var endDate = $('#recurrent-event-end-date').datetimepicker('getValue');
+	evt.endRepeat = endDate;
 
-	if (repeatOption == 'day') {
-		recurringEvents = createSimpleRecurringEvent(calEvent, endDate, 0, 0, 1);
-	} else if (repeatOption == 'week') {
-		recurringEvents = createSimpleRecurringEvent(calEvent, endDate, 0, 0, 7);
-	} else if (repeatOption == 'month') {
-		recurringEvents = createSimpleRecurringEvent(calEvent, endDate, 0, 1, 0);
-	} else if (repeatOption == 'year') {
-		recurringEvents = createSimpleRecurringEvent(calEvent, endDate, 1, 0, 0);
-	} else { // handle custom repeat settings
-		var frequencyOption = $('#recurrent-event-time-selector').val();
 
-		if (frequencyOption == 'daily') {
-			var inc = $('#daily-recurrent-freq').val();
-			recurringEvents = createSimpleRecurringEvent(calEvent, endDate, 0, 0, inc);
-		} else if (frequencyOption == 'weekly') {
-			var inc = $('#weekly-recurrent-freq').val();
-			var units = getWeeklyRepeatingDays();
-			if (units.length == 0) {
-				return calEvent;
+
+	if (repeatOption == 'custom') {
+		repeatOption = $('#recurrent-event-time-selector').val();
+		var repeatEvery;
+		var repeatOn;
+
+		if (repeatOption == 'day') {
+			repeatEvery = $('#dayly-recurrent-freq').val();
+		} else if (repeatOption == 'week') {
+			repeatEvery = $('#weekly-recurrent-freq').val();
+			repeatOn = getWeeklyRepeatingDays();
+			if (repeatOn.length == 0) {
+				return evt;
 			}
-			recurringEvents = createCustomWeeklyRecurringEvent(calEvent, endDate, inc, units);
-		} else if (frequencyOption == 'monthly') {
-			var inc = $('#monthly-recurrent-freq').val();
-			var units = getMonthlyRepeatingDays();
-			if (units.length == 0) {
-				return calEvent;
+		} else if (repeatOption == 'month') {
+			repeatEvery = $('#monthly-recurrent-freq').val();
+			repeatOn = getMonthlyRepeatingDays();
+			if (repeatOn.length == 0) {
+				return evt;
 			}
-			recurringEvents = createCustomMontlyRecurringEvent(calEvent, endDate, inc, units);
-		} else { // yearly
-			var inc = $('#yearly-recurrent-freq').val();
-			var units = getYearlyRepeatingMonths();
-			if (units.length == 0) {
-				return calEvent;
+		} else { // year
+			repeatEvery = $('#yearly-recurrent-freq').val();
+			repeatOn = getYearlyRepeatingMonths();
+			if (repeatOn.length == 0) {
+				return evt;
 			}
-			recurringEvents = createCustomYearlyRecurringEvent(calEvent, endDate, inc, units);
 		}
+
+		evt.repeatOption = repeatOption;
+		evt.repeatEvery = repeatEvery;
+		evt.repeatOn = repeatOn;
 	}
 
-	return new RecurrentCalendarEvent(recurringEvents);
-}
-
-function writeEventToScreen(eventString) {
-	$('#new-event-text').text(eventString);
+	return evt;
 }

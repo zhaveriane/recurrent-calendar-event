@@ -19,7 +19,11 @@ $(function() {
 function isValidEndTime() {
 	var startTime = $('#event-start-date').datetimepicker('getValue');
 	var endTime = $('#event-end-date').datetimepicker('getValue');
-    return !(endTime < startTime);
+	var allDayEvent = $('#all-day-event-checkbox').is(':checked');
+	if (!allDayEvent) {
+		return !(endTime < startTime);
+	}
+    return true;
 }
 function checkInputs() {
 	if (!isValidEndTime()) {
@@ -27,12 +31,35 @@ function checkInputs() {
 		return false;
 	}
 
-	var frequency = $('#' + $('#recurrent-event-time-selector').val() + '-recurrent-freq').val();
-	console.log(frequency);
-	if (!$.isNumeric(frequency)) {
-		writeEventToScreen('Frequency must be a numeric value.');
+	var repeatOption = $('#recurrent-event-type-selector').val();
+	if (repeatOption == "custom") {
+		var frequency = $('#' + $('#recurrent-event-time-selector').val() + 'ly-recurrent-freq').val();
+			if (!$.isNumeric(frequency)) {
+				writeEventToScreen('Frequency must be a numeric value.');
+				return false;
+			}
+	}
+
+	var eventName = $('#event-name').val();
+	var allDayEvent = $('#all-day-event-checkbox').is(':checked');
+	var allDayEventDate = $('#all-day-event-date').datetimepicker('getValue');
+	var startTime = $('#event-start-date').datetimepicker('getValue');
+	var endTime = $('#event-end-date').datetimepicker('getValue');
+	if (!eventName) {
+		writeEventToScreen('Please add event name')
 		return false;
 	}
+	if (allDayEvent) {
+		if (!allDayEventDate) {
+			writeEventToScreen('Please add event date details');
+			return false;
+		}
+	} else if (!startTime || !endTime) {
+		writeEventToScreen('Please add event date details');
+		return false;
+	}
+
+
 
 	return true;
 }
@@ -150,18 +177,18 @@ function getEventText() {
 		var frequencyOption = $('#recurrent-event-time-selector').val();
 		var frequency = 1;
 		var repeatingUnits = [];
-		if (frequencyOption == 'daily') {
-			frequency = $('#daily-recurrent-freq').val();
+		if (frequencyOption == 'day') {
+			frequency = $('#dayly-recurrent-freq').val();
 			eventString += ', ' + 'repeating every ' + frequency + ' day(s) ';
-		} else if (frequencyOption == 'weekly') {
+		} else if (frequencyOption == 'week') {
 			frequency = $('#weekly-recurrent-freq').val();
 			repeatingUnits = getWeeklyRepeatingDays();
 			eventString += ', ' + 'repeating every ' + frequency + ' week(s) ' + getWeeklyRepeatingString(repeatingUnits);
-		} else if (frequencyOption == 'monthly') {
+		} else if (frequencyOption == 'month') {
 			frequency = $('#monthly-recurrent-freq').val();
 			repeatingUnits = getMonthlyRepeatingDays();
 			eventString += ', ' + 'repeating every ' + frequency + ' month(s) ' + getMonthlyRepeatingString(repeatingUnits);
-		} else { // yearly
+		} else { // year
 			frequency = $('#yearly-recurrent-freq').val();
 			repeatingUnits = getYearlyRepeatingMonths();
 			eventString += ', ' + 'repeating every ' + frequency + ' year(s) ' + getYearlyRepeatingString(repeatingUnits);
